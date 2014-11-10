@@ -1,0 +1,58 @@
+<script> 
+  $(document).ready(function() {
+    console.log("test1");
+    $.ajax({
+      url:'<%= "/tweets" %>',
+      type: "GET",
+      success:function(result){
+        $("#recent_tweets").html(result);
+        $("#wait-msg").hide();
+      },
+      error:function(jqXHR, textStatus, errorThrown)
+      {
+        $("#wait-msg").hide();
+      }
+    });
+
+    $("#post_tweet").submit(function(event)
+    { 
+      console.log("test");
+      $("#wait-msg").show();
+      var postData = $(this).serializeArray();
+      var formURL = $(this).attr("action");
+      $.ajax(
+      {
+        url : formURL,
+        type: "POST",
+        data : postData,
+        success:function(result)
+        {
+          
+          $("#recent_tweets").html(result);
+          $("#wait-msg").hide();
+        },
+        error: function(jqXHR, textStatus, errorThrown)
+        {
+          $("#wait-msg").hide();
+        }
+      });
+      event.preventDefault();
+    });
+  });
+</script>
+
+<b> Compose New Tweet</b>  <br><br>
+<form method="post" action="/tweets" id="post_tweet">
+  <input type="hidden" name="post_tweet" value="item?id=8548992">
+  <table border="0"><tr><td><textarea name="tweet_msg" rows="4" cols="80" autocorrect="on" autocapitalize="off"></textarea></td></tr></table><br>
+  <input class="mybutton1" type="submit" value="Submit">
+  <br>
+</form>
+
+<div id="wait-msg">
+      <br>
+      <img src="ajax-loader.gif"> Updating</img>
+    </div>
+<div id="recent_tweets"> </div>
+
+    
